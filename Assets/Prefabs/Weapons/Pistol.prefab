@@ -105,7 +105,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: -1714286363, guid: 2b41a1cd802de1d438733eb5f17c1598, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -132,6 +132,9 @@ MonoBehaviour:
   firePoint: {fileID: 4736890548871730474}
   isAuto: 0
   fireRate: 0.2
+  recoilForce: 0.1
   bulletPrefab: {fileID: 8985577316321602191, guid: 253ca4880ca47eb41a4bacf96fb0ecdd, type: 3}
   muzzleFlashPrefab: {fileID: 5659672650839136257, guid: 083fcf3307310b448b7ed25f9e10c5ca, type: 3}
   bulletSpreadAngle: 5
+  shakeDuration: 0.1
+  shakeMagnitude: 0.1

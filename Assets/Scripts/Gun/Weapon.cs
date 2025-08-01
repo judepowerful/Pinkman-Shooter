@@ -9,6 +9,7 @@ public abstract class Weapon : MonoBehaviour
     public bool isAuto = false;
     public float fireRate = 0.2f;
     private float nextFireTime = 0f;
+    public float recoilForce = 2f;
 
     public bool CanFire()
     {

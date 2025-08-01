@@ -71,6 +71,7 @@ public class GunController : MonoBehaviour
         {
             Vector2 aimDir = (Camera.main.ScreenToWorldPoint(Input.mousePosition) - currentWeapon.transform.position).normalized;
             currentWeapon.TryFire(aimDir);
+            ApplyRecoilToPlayer(aimDir);
         }
     }
 
@@ -84,5 +85,21 @@ public class GunController : MonoBehaviour
             Destroy(currentWeapon.gameObject);
 
         currentWeapon = Instantiate(weaponPrefab, transform);
+    }
+
+    /// <summary>
+    /// 应用后坐力到玩家
+    /// 根据武器朝向施加力
+    /// </summary>
+    private void ApplyRecoilToPlayer(Vector2 aimDir)
+    {
+        if (playerController == null) return;
+        Rigidbody2D rb = playerController.GetComponent<Rigidbody2D>();
+        if (rb == null) return;
+
+        // 计算后坐力方向
+        // 这里假设后坐力是水平的，向相反方向施加
+        Vector2 recoilDir = new Vector2(-aimDir.normalized.x, 0f).normalized;
+        rb.AddForce(recoilDir * currentWeapon.recoilForce, ForceMode2D.Impulse);
     }
 }

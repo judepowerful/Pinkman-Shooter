@@ -2,37 +2,49 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    public Transform target;           // 玩家
-    public float smoothSpeed = 5f;     // Lerp 速度
-    public Vector2 offset = new Vector2(0f, 1.5f); // 基础偏移（让相机稍微高一点）
-    public float lookAheadDistance = 2f;  // 面朝方向偏移距离
-    public float lookAheadSmoothing = 2f;
+    [Header("Camera Follow Settings / 相机跟随设置")]
+    [Tooltip("目标对象（通常是玩家）")]
+    [SerializeField] private Transform target;
+    [Tooltip("相机跟随目标的平滑速度")]
+    [SerializeField] private float smoothSpeed = 4f;
+    [Tooltip("相机跟随目标的偏移量")]
+    [SerializeField] private Vector2 offset = new Vector2(0f, 1f);
+    [Tooltip("Aiming方向偏移距离")]
+    [SerializeField] private float lookAheadDistance = 4f;
+    [Tooltip("Aiming方向平滑插值")]
+    [SerializeField] private float lookAheadSmoothing = 4f;
 
     private Vector3 currentVelocity;
-    private float currentLookAhead = 0f;
-    private bool facingRight = true;
+
+    // ✅ 改成 Vector2 以支持任意方向
+    private Vector2 currentLookOffset = Vector2.zero;
+    private Vector3 mouseWorld;
 
     void LateUpdate()
     {
         if (target == null) return;
 
-        // 获取目标位置 + 上下偏移
         Vector3 baseTargetPos = target.position + (Vector3)offset;
 
-        // === 处理 Look Ahead ===
-        float lookAheadTarget = facingRight ? lookAheadDistance : -lookAheadDistance;
-        currentLookAhead = Mathf.Lerp(currentLookAhead, lookAheadTarget, Time.deltaTime * lookAheadSmoothing);
+        Vector2 toMouse = (Vector2)(mouseWorld - target.position);
 
-        baseTargetPos.x += currentLookAhead;
+        Vector2 lookOffsetTarget = toMouse.normalized * lookAheadDistance;
 
-        // 平滑跟随
-        Vector3 desiredPos = baseTargetPos;
-        Vector3 smoothPos = Vector3.SmoothDamp(transform.position, desiredPos, ref currentVelocity, 1f / smoothSpeed);
+        // ✅ 直接在 currentLookOffset 上做 Lerp
+        currentLookOffset = Vector2.Lerp(
+            currentLookOffset,
+            lookOffsetTarget,
+            Time.deltaTime * lookAheadSmoothing
+        );
+
+        Vector3 finalTarget = baseTargetPos + (Vector3)currentLookOffset;
+
+        Vector3 smoothPos = Vector3.SmoothDamp(transform.position, finalTarget, ref currentVelocity, 1f / smoothSpeed);
         transform.position = new Vector3(smoothPos.x, smoothPos.y, transform.position.z);
     }
 
-    public void SetFacingDirection(bool isFacingRight)
+    public void SetMouseWorldPosition(Vector3 mouseCameraFollowPosition)
     {
-        facingRight = isFacingRight;
+        mouseWorld = mouseCameraFollowPosition;
     }
 }

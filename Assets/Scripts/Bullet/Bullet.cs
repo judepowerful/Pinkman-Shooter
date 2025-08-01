@@ -1,8 +1,23 @@
 using UnityEngine;
 
+public enum BulletTeam
+{
+    Player,
+    Enemy
+}
+
 public class Bullet : MonoBehaviour
 {
+    [Header("Bullet Settings / 子弹设置")]
     public float speed = 15f;
+    public BulletTeam team = BulletTeam.Player;
+
+    [Header("Hit Effect on object / 子弹击中物体对物体产生的效果")]
+    public HitInfo hitInfo;
+
+    [Header("Hit Effect / 命中特效")]
+    public GameObject hitEffectPrefab; // 每种子弹可指定命中特效
+
     private Animator anim;
 
     void Start()
@@ -17,17 +32,33 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player") || collision.CompareTag("Bullet"))
+        if ((team == BulletTeam.Player && collision.CompareTag("Player")) ||
+            (team == BulletTeam.Enemy && collision.CompareTag("Enemy")) ||
+            collision.CompareTag("Bullet") || collision.CompareTag("Corpse"))
         {
-            // 不处理玩家或子弹碰撞
             return;
         }
-        Debug.Log("Bullet hit: " + collision.gameObject.name);
-        // 播放爆炸动画
-        anim.SetTrigger("Explode");
+
+        if (team == BulletTeam.Player && collision.CompareTag("Enemy"))
+        {
+            collision.GetComponent<Enemy>()?.TakeDamage(1);
+        }
+        else if (team == BulletTeam.Enemy && collision.CompareTag("Player"))
+        {
+            collision.GetComponent<PlayerController>()?.TakeDamage(hitInfo, transform.position);
+        }
+
+        // 播放命中特效
+        if (hitEffectPrefab != null)
+        {
+            Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
+        }
+
+        // 禁用碰撞 & 停止运动
         GetComponent<Collider2D>().enabled = false;
         GetComponent<Rigidbody2D>().velocity = Vector2.zero;
 
+        // 延迟销毁，等特效播放完
         Destroy(gameObject);
     }
 }

@@ -2,16 +2,23 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("Movement Settings")]
-    public float moveSpeed = 8f;
-    public float jumpForce = 8f;
-    public float airControlFactor = 0.3f;
+    [Header("Movement Settings / 移动设置")]
+    [SerializeField] private float moveSpeed = 8f;
+    [SerializeField] private float jumpForce = 8f;
+    [SerializeField] private float airControlFactor = 0.3f;
 
-    [Header("Ground Detection")]
+    [Header("Health Settings / 生命值设置")]
+    [SerializeField] private int maxHealth = 20;
+    public int currentHealth;
+
+    [Header("Ground Detection / 地面检测")]
     public Transform groundCheck;
-    public float groundCheckRadius = 0.1f;
-    public LayerMask groundLayer;
 
+    [Header("UI Settings / UI设置")]
+    public SegmentedHealthBar healthBarUI; // 拖入 UI 控件
+
+    private float groundCheckRadius = 0.1f;
+    private LayerMask groundLayer;
     private Rigidbody2D rb;
     private Animator anim;
     private SpriteRenderer sr;
@@ -26,7 +33,12 @@ public class PlayerController : MonoBehaviour
         anim = GetComponent<Animator>();
         sr = GetComponent<SpriteRenderer>();
 
+        currentHealth = maxHealth;
+        healthBarUI.Init(maxHealth);
+        healthBarUI.UpdateHealth(currentHealth);
+
         rb.freezeRotation = true;
+        groundLayer = LayerMask.GetMask("Ground");
     }
 
     private void Update()
@@ -35,7 +47,7 @@ public class PlayerController : MonoBehaviour
         HandleMovement();
         HandleJump();
         UpdateAnimator();
-        UpdateCameraFacing();
+        UpdateCameraMouseFollow();
     }
 
     /// <summary>
@@ -90,9 +102,9 @@ public class PlayerController : MonoBehaviour
     /// 更新相机朝向
     /// 根据角色朝向设置相机跟随方向
     /// </summary>
-    private void UpdateCameraFacing()
+    private void UpdateCameraMouseFollow()
     {
-        Camera.main.GetComponentInParent<CameraFollow>().SetFacingDirection(facingRight);
+        Camera.main.GetComponentInParent<CameraFollow>().SetMouseWorldPosition(mouseWorld);
     }
 
     /// <summary>
@@ -102,6 +114,36 @@ public class PlayerController : MonoBehaviour
     private bool IsGrounded()
     {
         return Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+    }
+
+    public void TakeDamage(HitInfo hit, Vector2 attackerPosition)
+    {
+        // 减少生命值
+        currentHealth -= hit.damage;
+
+        // 更新 UI
+        healthBarUI.UpdateHealth(currentHealth);
+
+        // 播动画
+        anim.SetTrigger("hit");
+
+        // 击退方向根据攻击者位置 & hit.knockbackDirection
+        Vector2 dir = ((Vector2)transform.position - attackerPosition).normalized;
+        Vector2 knockback = new Vector2(Mathf.Sign(dir.x) * hit.knockbackDirection.x, hit.knockbackDirection.y);
+        rb.velocity = Vector2.zero;
+        rb.AddForce(knockback * hit.knockbackForce, ForceMode2D.Impulse);
+
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        anim.SetTrigger("die");
+        // 这里可以添加更多死亡逻辑，比如重置场景等
+        Debug.Log("Player has died.");
     }
 
     private void OnDrawGizmosSelected()

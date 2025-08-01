@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 7725148991689820058}
   m_Layer: 0
   m_Name: PistolBullet
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 728921936, guid: 7977fa735d6ce334cacf25a9ae67a8e7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -163,6 +163,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 14
+  team: 0
+  hitInfo:
+    damage: 1
+    knockbackDirection: {x: 1, y: 0}
+    knockbackForce: 5
+  hitEffectPrefab: {fileID: 6804887390087601607, guid: af0863080cdbaf94e9ff492540460a6b, type: 3}
 --- !u!95 &7725148991689820058
 Animator:
   serializedVersion: 5
