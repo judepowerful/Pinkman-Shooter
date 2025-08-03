@@ -11,6 +11,7 @@ public class Bullet : MonoBehaviour
     [Header("Bullet Settings / 子弹设置")]
     public float speed = 15f;
     public BulletTeam team = BulletTeam.Player;
+    public float lifeTime = 5f; // 子弹生命周期
 
     [Header("Hit Effect on object / 子弹击中物体对物体产生的效果")]
     public HitInfo hitInfo;
@@ -18,11 +19,10 @@ public class Bullet : MonoBehaviour
     [Header("Hit Effect / 命中特效")]
     public GameObject hitEffectPrefab; // 每种子弹可指定命中特效
 
-    private Animator anim;
-
-    void Start()
+    private void Start()
     {
-        anim = GetComponent<Animator>();
+        // 设置子弹生命周期
+        Destroy(gameObject, lifeTime);
     }
 
     void Update()

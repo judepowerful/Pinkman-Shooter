@@ -1,21 +1,30 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR;
 
 public class GunController : MonoBehaviour
 {
     [Header("武器初始设定")]
-    public GameObject initialWeaponPrefab; // 初始武器预设
+    public List<Weapon> weaponPrefabs; // 可装备的武器列表
     public Transform holdingPosition;
-
     private PlayerController playerController;
     public Weapon currentWeapon;
     private bool facingRight = true;
+    private int currentWeaponIndex = 0;
+    [SerializeField] private float switchCooldown = 0.3f; // 切枪间隔（秒）
+    private float lastSwitchTime = -999f;
 
+    private Vector3 originalWeaponLocalPos;
+    private Vector3 recoilVisualOffset;
+    [SerializeField] private float recoilReturnSpeed = 20f;
 
     private void Start()
     {
         // 初始化武器
-        EquipWeapon(initialWeaponPrefab.GetComponent<Weapon>());
+        EquipWeapon(weaponPrefabs[currentWeaponIndex]);
         playerController = GetComponent<PlayerController>();
+
+        originalWeaponLocalPos = holdingPosition.localPosition;
     }
 
     private void Update()
@@ -24,9 +33,13 @@ public class GunController : MonoBehaviour
 
         facingRight = playerController.facingRight;
 
+        HandleScrollInput();
         HandleAim();
         HandleWeaponPosition();
         HandleWeaponFiring();
+
+        // 平滑回弹视觉 recoil
+        recoilVisualOffset = Vector3.Lerp(recoilVisualOffset, Vector3.zero, recoilReturnSpeed * Time.deltaTime);
     }
 
     /// <summary>
@@ -50,7 +63,7 @@ public class GunController : MonoBehaviour
     /// </summary>
     private void HandleWeaponPosition()
     {
-        Vector3 localPos = holdingPosition.localPosition;
+        Vector3 localPos = originalWeaponLocalPos + recoilVisualOffset;
         currentWeapon.transform.localPosition = new Vector2(
             facingRight ? localPos.x : -localPos.x,
             localPos.y
@@ -70,8 +83,15 @@ public class GunController : MonoBehaviour
         if (isFiring)
         {
             Vector2 aimDir = (Camera.main.ScreenToWorldPoint(Input.mousePosition) - currentWeapon.transform.position).normalized;
-            currentWeapon.TryFire(aimDir);
-            ApplyRecoilToPlayer(aimDir);
+            bool fired = currentWeapon.TryFire(aimDir);
+            if (fired)
+            {
+                ApplyRecoilToPlayer(aimDir);
+
+                // 应用视觉后坐力
+                float kickDistance = currentWeapon.recoilVisualDistance;
+                recoilVisualOffset = Vector3.left * kickDistance;
+            }
         }
     }
 
@@ -93,13 +113,39 @@ public class GunController : MonoBehaviour
     /// </summary>
     private void ApplyRecoilToPlayer(Vector2 aimDir)
     {
-        if (playerController == null) return;
-        Rigidbody2D rb = playerController.GetComponent<Rigidbody2D>();
-        if (rb == null) return;
+        float direction = -Mathf.Sign(aimDir.x);
+        float recoilStrength = currentWeapon.recoilForce;
 
-        // 计算后坐力方向
-        // 这里假设后坐力是水平的，向相反方向施加
-        Vector2 recoilDir = new Vector2(-aimDir.normalized.x, 0f).normalized;
-        rb.AddForce(recoilDir * currentWeapon.recoilForce, ForceMode2D.Impulse);
+        playerController.AddRecoilVelocity(direction * recoilStrength);
+    }
+
+    /// <summary>
+    /// 处理武器切换
+    /// 使用鼠标滚轮切换武器
+    /// </summary>
+    private void HandleScrollInput()
+    {
+        if (Time.time - lastSwitchTime < switchCooldown) return; // 冷却中，忽略滚动
+
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+
+        if (scroll > 0f)
+        {
+            currentWeaponIndex++;
+            if (currentWeaponIndex >= weaponPrefabs.Count)
+                currentWeaponIndex = 0;
+
+            EquipWeapon(weaponPrefabs[currentWeaponIndex]);
+            lastSwitchTime = Time.time;
+        }
+        else if (scroll < 0f)
+        {
+            currentWeaponIndex--;
+            if (currentWeaponIndex < 0)
+                currentWeaponIndex = weaponPrefabs.Count - 1;
+
+            EquipWeapon(weaponPrefabs[currentWeaponIndex]);
+            lastSwitchTime = Time.time;
+        }
     }
 }

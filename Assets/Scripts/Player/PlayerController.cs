@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -23,9 +24,17 @@ public class PlayerController : MonoBehaviour
     private Animator anim;
     private SpriteRenderer sr;
     
-    [HideInInspector]
-    public bool facingRight = true; // ✅ 由 GunController 控制角色翻转
-    public Vector3 mouseWorld; // ✅ 用于获取鼠标位置
+    [HideInInspector] public bool facingRight = true;
+    [HideInInspector] public Vector3 mouseWorld;
+    
+    // 输入
+    private float moveInput = 0f;
+    private bool jumpRequested = false;
+
+    // 后坐力
+    private float recoilVelocity = 0f;
+    [SerializeField] private float recoilDecay = 10f; // 衰减速度（单位/秒）
+
 
     private void Start()
     {
@@ -44,10 +53,19 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         HandleFacingDirection();
-        HandleMovement();
-        HandleJump();
         UpdateAnimator();
         UpdateCameraMouseFollow();
+
+        moveInput = Input.GetAxis("Horizontal");
+        if (Input.GetButtonDown("Jump"))
+            jumpRequested = true;
+    }
+
+    private void FixedUpdate()
+    {
+        // 这里可以添加物理相关的处理
+        HandleMovement();
+        HandleJump();
     }
 
     /// <summary>
@@ -67,10 +85,26 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void HandleMovement()
     {
-        float xInput = Input.GetAxisRaw("Horizontal");
         float targetSpeed = IsGrounded() ? moveSpeed : moveSpeed * airControlFactor;
-        float velocityX = Mathf.Lerp(rb.velocity.x, xInput * targetSpeed, 0.1f);
-        rb.velocity = new Vector2(velocityX, rb.velocity.y);
+        float moveVelocityX = moveInput * targetSpeed;
+
+        // ✅ 加上 recoilVelocity
+        float finalVelocityX = moveVelocityX + recoilVelocity;
+        rb.velocity = new Vector2(finalVelocityX, rb.velocity.y);
+
+        // ✅ recoilVelocity 每帧慢慢衰减为 0
+        recoilVelocity = Mathf.MoveTowards(recoilVelocity, 0f, recoilDecay * Time.fixedDeltaTime);
+    }
+
+    /// <summary>
+    /// 添加后坐力速度
+    /// 通过外部调用来添加后坐力
+    /// 例如：在武器射击时调用此方法
+    /// </summary>
+    /// <param name="recoil"></param>
+    public void AddRecoilVelocity(float recoil)
+    {
+        recoilVelocity = recoil;
     }
 
     /// <summary>
@@ -79,10 +113,13 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void HandleJump()
     {
-        if (Input.GetButtonDown("Jump") && IsGrounded())
+        if (jumpRequested && IsGrounded())
         {
-            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         }
+
+        // ✅ 清除跳跃请求（即使跳不起来也要清除）
+        jumpRequested = false;
     }
 
     /// <summary>
@@ -91,9 +128,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void UpdateAnimator()
     {
-        float xInput = Input.GetAxisRaw("Horizontal");
-
-        anim.SetBool("isRunning", xInput != 0 && IsGrounded());
+        anim.SetBool("isRunning", moveInput != 0 && IsGrounded());
         anim.SetBool("isGrounded", IsGrounded());
         anim.SetFloat("velocityY", rb.velocity.y);
     }
@@ -116,6 +151,11 @@ public class PlayerController : MonoBehaviour
         return Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
     }
 
+    /// <summary>
+    /// 处理玩家受到伤害
+    /// </summary>
+    /// <param name="hit">击中信息</param>
+    /// <param name="attackerPosition">攻击者位置</param>
     public void TakeDamage(HitInfo hit, Vector2 attackerPosition)
     {
         // 减少生命值
@@ -139,6 +179,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 处理玩家死亡
+    /// 播放死亡动画并执行其他死亡逻辑
+    /// </summary>
     private void Die()
     {
         anim.SetTrigger("die");

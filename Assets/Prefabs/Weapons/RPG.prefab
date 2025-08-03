@@ -106,7 +106,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 1350572772, guid: 2b41a1cd802de1d438733eb5f17c1598, type: 3}
+  m_Sprite: {fileID: -421797935, guid: 2b41a1cd802de1d438733eb5f17c1598, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -130,5 +130,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   firePoint: {fileID: 2937180103290842284}
-  holdingOffset: {x: 0.4, y: -0.4}
+  isAuto: 0
+  fireRate: 0.2
+  recoilForce: 2
   bulletPrefab: {fileID: 0}

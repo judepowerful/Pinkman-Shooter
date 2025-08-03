@@ -157,8 +157,8 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_AngularDrag: 0
+  m_GravityScale: 2
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -168,7 +168,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!61 &879098217209135697
 BoxCollider2D:
@@ -179,7 +179,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 3379741084319996356}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: e1969c9b506fd2e47a54c41660768455, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -229,13 +229,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 8
   jumpForce: 10
-  airControlFactor: 0.5
+  airControlFactor: 1
   maxHealth: 30
   currentHealth: 0
   groundCheck: {fileID: 103038180956947683}
   healthBarUI: {fileID: 0}
   facingRight: 1
   mouseWorld: {x: 0, y: 0, z: 0}
+  recoilDecay: 10
 --- !u!114 &6133722800368427035
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -248,9 +249,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03809634ef2836d498692275d27702fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialWeaponPrefab: {fileID: 7414189631986729967, guid: 3dfdefd7fba6e5545b5cdda4c7418e6f, type: 3}
+  weaponPrefabs:
+  - {fileID: 8198472671860653688, guid: c2eab1d848012fa4ca97868ca0dc712d, type: 3}
+  - {fileID: 7249090903486007156, guid: 3dfdefd7fba6e5545b5cdda4c7418e6f, type: 3}
   holdingPosition: {fileID: 1932788946850836523}
   currentWeapon: {fileID: 0}
+  switchCooldown: 0.3
+  recoilReturnSpeed: 40
 --- !u!1 &7887905238156164429
 GameObject:
   m_ObjectHideFlags: 0

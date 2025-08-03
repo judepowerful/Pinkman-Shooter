@@ -48,7 +48,7 @@ public class SegmentedHealthBar : MonoBehaviour
         Vector2 cellSize = grid.cellSize;
         Vector2 spacing = grid.spacing;
 
-        float totalWidth = cellSize.x * maxHealth + spacing.x * (maxHealth - 1) + (grid.padding.left + grid.padding.right) * 3f;
+        float totalWidth = cellSize.x * maxHealth + spacing.x * (maxHealth - 1) + grid.padding.left + 50; // 50是额外的右边距
 
         rectTransform.sizeDelta = new Vector2(totalWidth, rectTransform.sizeDelta.y);
     }
