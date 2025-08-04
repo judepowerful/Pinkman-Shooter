@@ -4,37 +4,70 @@ public class Carbine : Weapon
 {
     [Header("子弹设置")]
     [SerializeField] private GameObject bulletPrefab;
-    [SerializeField] private float bulletSpreadAngle = 5f; // 子弹散射角度（±）
+
+    [Header("散射角设置")]
+    [SerializeField] private float initialSpreadAngle = 5f;
+    [SerializeField] private float maxSpreadAngle = 15f;
+    [SerializeField] private float spreadIncreasePerShot = 0.1f;
+    [SerializeField] private float spreadRecoverRate = 5f;
+
+    public float currentSpreadAngle;
+    public float CurrentSpreadRatio => Mathf.InverseLerp(initialSpreadAngle, maxSpreadAngle, currentSpreadAngle);
+
     [Header("子弹壳设置")]
     [SerializeField] private GameObject bulletShellPrefab;
-    [SerializeField] private Transform shellEjectPoint;     // 子弹壳飞出的起点
-    [SerializeField] private float shellEjectForce = 5f;    // 弹出力度
-    [SerializeField] private float shellTorque = 3f;       // 旋转力度
+    [SerializeField] private Transform shellEjectPoint;
+    [SerializeField] private float shellEjectForce = 5f;
+    [SerializeField] private float shellTorque = 3f;
+
     [Header("枪口火花设置")]
     [SerializeField] private GameObject muzzleFlashPrefab;
+
     [Header("震动设置")]
-    [SerializeField] private float shakeDuration = 0.1f; // 震动持续时间
-    [SerializeField] private float shakeMagnitude = 0.1f; // 震
+    [SerializeField] private float shakeDuration = 0.1f;
+    [SerializeField] private float shakeMagnitude = 0.1f;
+
+    protected override void Start()
+    {
+        base.Start();
+        currentSpreadAngle = initialSpreadAngle;
+    }
+
+    private void Update()
+    {
+        if (!Input.GetMouseButton(0)) // 玩家没有按住左键时恢复
+        {
+            currentSpreadAngle -= spreadRecoverRate * Time.deltaTime;
+            currentSpreadAngle = Mathf.Max(currentSpreadAngle, initialSpreadAngle);
+        }
+    }
+
+    public override bool TryFire(Vector2 aimDir)
+    {
+        if (CanFire())
+        {
+            Shoot(aimDir);
+            nextFireTime = Time.time + fireRate;
+
+            currentSpreadAngle += spreadIncreasePerShot;
+            currentSpreadAngle = Mathf.Min(currentSpreadAngle, maxSpreadAngle);
+            return true;
+        }
+
+        return false;
+    }
 
     public override void Shoot(Vector2 aimDir)
     {
-        // 生成子弹
-        float spread = Random.Range(-bulletSpreadAngle, bulletSpreadAngle);
+        float spread = Random.Range(-currentSpreadAngle, currentSpreadAngle);
         Vector2 spreadDir = Quaternion.Euler(0, 0, spread) * aimDir.normalized;
         Quaternion rotation = Quaternion.FromToRotation(Vector2.right, spreadDir);
         Instantiate(bulletPrefab, firePoint.position, rotation);
 
-        // 弹出子弹壳
         EjectShell();
-
-        // 生成 muzzle flash
         Instantiate(muzzleFlashPrefab, firePoint.position, rotation, transform);
-
-        // 震动
         CameraShake.Instance.Shake(shakeDuration, shakeMagnitude);
-
-        // 使用 WeaponAudioManager 播放开火音效
-        audioManager?.PlayShoot();
+        audioManager.PlayShoot();
     }
 
     private void EjectShell()

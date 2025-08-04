@@ -164,7 +164,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
-  m_Pitch: 0.5
+  m_Pitch: 1
   Loop: 0
   Mute: 0
   Spatialize: 0
@@ -263,7 +263,7 @@ MonoBehaviour:
   isAuto: 0
   fireRate: 0.2
   recoilForce: 2
-  recoilVisualDistance: 0.15
+  recoilVisualDistance: 0.2
   bulletPrefab: {fileID: 5355328341452937827, guid: f29c1e02e4809214488e62c7bd3fdc98, type: 3}
   bulletSpreadAngle: 5
   bulletShellPrefab: {fileID: 4974906040481908091, guid: a6b7161c8a7fb8140b23e4cf2a26b48f, type: 3}
@@ -286,5 +286,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shootClip: {fileID: 8300000, guid: f0f2ddac9a1a9b04299e83b3dbd73e87, type: 3}
-  reloadClip: {fileID: 0}
+  reloadClip: {fileID: 8300000, guid: 0fe1f89383df18b45a6c0ffabb6892e0, type: 3}
   emptyClip: {fileID: 0}

@@ -32,7 +32,7 @@ public class Pistol : Weapon
         CameraShake.Instance.Shake(shakeDuration, shakeMagnitude); // 震动效果
 
         // 使用 WeaponAudioManager 播放开火音效
-        audioManager?.PlayShoot();
+        audioManager.PlayShoot();
     }
 
     private void EjectShell()

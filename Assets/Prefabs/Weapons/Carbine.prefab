@@ -263,9 +263,13 @@ MonoBehaviour:
   isAuto: 1
   fireRate: 0.1
   recoilForce: 2
-  recoilVisualDistance: 0.15
+  recoilVisualDistance: 0.3
   bulletPrefab: {fileID: 8985577316321602191, guid: 253ca4880ca47eb41a4bacf96fb0ecdd, type: 3}
-  bulletSpreadAngle: 1
+  initialSpreadAngle: 0
+  maxSpreadAngle: 10
+  spreadIncreasePerShot: 0.5
+  spreadRecoverRate: 10
+  currentSpreadAngle: 0
   bulletShellPrefab: {fileID: 4974906040481908091, guid: a6b7161c8a7fb8140b23e4cf2a26b48f, type: 3}
   shellEjectPoint: {fileID: 7020365249566605648}
   shellEjectForce: 4
@@ -286,5 +290,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shootClip: {fileID: 8300000, guid: cef0c61312c21a348a8f1dafb48f0eec, type: 3}
-  reloadClip: {fileID: 0}
+  reloadClip: {fileID: 8300000, guid: aee6f88bf1c216f43b8b7890a1151766, type: 3}
   emptyClip: {fileID: 0}

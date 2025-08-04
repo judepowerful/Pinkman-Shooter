@@ -105,6 +105,17 @@ public class GunController : MonoBehaviour
             Destroy(currentWeapon.gameObject);
 
         currentWeapon = Instantiate(weaponPrefab, transform);
+
+        // 装备武器后通知 UI
+        SpreadIndicator spreadUI = FindObjectOfType<SpreadIndicator>();
+        if (spreadUI != null && currentWeapon is Carbine c)
+        {
+            spreadUI.SetCarbine(c);
+        }
+        else if (spreadUI != null)
+        {
+            spreadUI.SetCarbine(null); // 如果换成不是 Carbine 的武器，就隐藏 UI
+        }
     }
 
     /// <summary>

@@ -101,6 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 15
   team: 1
+  lifeTime: 5
   hitInfo:
     damage: 1
     knockbackDirection: {x: 1, y: 0.5}
@@ -138,9 +139,9 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.033832043, y: 0.008095801}
+  m_Offset: {x: 0.039565213, y: 0.008095801}
   serializedVersion: 2
-  m_Radius: 0.3579021
+  m_Radius: 0.3594
 --- !u!50 &-4373581617577863655
 Rigidbody2D:
   serializedVersion: 4

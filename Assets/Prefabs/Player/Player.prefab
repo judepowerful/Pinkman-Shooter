@@ -252,10 +252,11 @@ MonoBehaviour:
   weaponPrefabs:
   - {fileID: 8198472671860653688, guid: c2eab1d848012fa4ca97868ca0dc712d, type: 3}
   - {fileID: 7249090903486007156, guid: 3dfdefd7fba6e5545b5cdda4c7418e6f, type: 3}
+  - {fileID: 45938701384033134, guid: b8394b871222b724e953a4f9f6a58ebf, type: 3}
   holdingPosition: {fileID: 1932788946850836523}
   currentWeapon: {fileID: 0}
   switchCooldown: 0.3
-  recoilReturnSpeed: 40
+  recoilReturnSpeed: 20
 --- !u!1 &7887905238156164429
 GameObject:
   m_ObjectHideFlags: 0
