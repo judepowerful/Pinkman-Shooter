@@ -19,6 +19,9 @@ public class Bullet : MonoBehaviour
     [Header("Hit Effect / 命中特效")]
     public GameObject hitEffectPrefab; // 每种子弹可指定命中特效
 
+    [Header("击中音效")]
+    public AudioClip hitSound; // 撞击音效
+
     private bool isHit = false; // 是否已经命中
 
     private void Start()
@@ -53,6 +56,9 @@ public class Bullet : MonoBehaviour
 
         isHit = true; // 标记为已命中
 
+        // 播放命中音效
+        if (hitSound != null)
+            AudioSource.PlayClipAtPoint(hitSound, transform.position);
         // 播放命中特效
         if (hitEffectPrefab != null)
             Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);

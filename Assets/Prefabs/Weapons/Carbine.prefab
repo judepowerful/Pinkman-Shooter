@@ -139,7 +139,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 3
   m_Sprite: {fileID: -1555434474, guid: 2aae9ddd9ed10ec4d87f7ff68a3c3d00, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -275,7 +275,7 @@ MonoBehaviour:
   shellEjectForce: 4
   shellTorque: 0.5
   muzzleFlashPrefab: {fileID: 7116420715074348796, guid: d311a206fb3f7a44d9fb5e0b049ffd9b, type: 3}
-  shakeDuration: 0.2
+  shakeDuration: 0.1
   shakeMagnitude: 0.2
 --- !u!114 &-5275505783007964384
 MonoBehaviour:

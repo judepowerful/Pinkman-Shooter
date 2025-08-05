@@ -15,6 +15,9 @@ public abstract class Enemy : MonoBehaviour
     [Tooltip("Enemy stops approaching player when within this distance.")]
     [SerializeField] [Range(0f, 10f)] private float stopDistance = 1f;
 
+    [Header("樱桃掉落")]
+    [SerializeField] private GameObject cherryPrefab; // 拖入你的 prefab
+
     public float MoveSpeed => moveSpeed;
     public int MaxHealth => maxHealth;
     public float StopDistance => stopDistance;
@@ -90,7 +93,11 @@ public abstract class Enemy : MonoBehaviour
 
         // 停止所有行为
         rb.velocity = Vector2.zero;
-
+        // 掉落樱桃
+        if (cherryPrefab != null)
+        {
+            Instantiate(cherryPrefab, transform.position, Quaternion.identity);
+        }
         // 随机方向跳起（模拟死亡反弹）
         Vector2 deathForce = new Vector2(Random.Range(-1f, 1f), 1f).normalized * 5f;
         rb.AddForce(deathForce, ForceMode2D.Impulse);

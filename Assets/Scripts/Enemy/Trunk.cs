@@ -3,6 +3,7 @@ using UnityEngine;
 public class Trunk : Enemy
 {
     public GameObject bulletPrefab;
+    public AudioClip shootSound;
     public Transform firePoint;
     public float attackCooldown = 2f;
     public float attackRange = 6f;
@@ -43,6 +44,10 @@ public class Trunk : Enemy
             /// Fire Bullet is called from the Animator ///
             /// This method will be called when the shoot animation reaches the point where the bullet should be fired ///
             animator.SetTrigger("shoot");
+            if (shootSound != null)
+            {
+                AudioSource.PlayClipAtPoint(shootSound, transform.position);
+            }
             lastAttackTime = Time.time;
         }
     }

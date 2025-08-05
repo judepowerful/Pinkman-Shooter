@@ -76,7 +76,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -165262965, guid: f8f2a06f18cdd694d989627d29e052e7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
@@ -196,6 +196,8 @@ MonoBehaviour:
   moveSpeed: 2
   maxHealth: 2
   stopDistance: 1
+  cherryPrefab: {fileID: 924298445294307913, guid: ecff087e057d20c459c8c413c3f736d9, type: 3}
+  isDead: 0
   walkTimeMin: 2
   walkTimeMax: 4
   waitTimeMin: 1

@@ -75,7 +75,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 8ab8d32166c2f7d419853299440ab9aa, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
@@ -107,6 +107,7 @@ MonoBehaviour:
     knockbackDirection: {x: 1, y: 0.5}
     knockbackForce: 5
   hitEffectPrefab: {fileID: 0}
+  hitSound: {fileID: 8300000, guid: 9628e26e0045aa942bd4e30ff9a2b12c, type: 3}
 --- !u!58 &6002132356244626280
 CircleCollider2D:
   m_ObjectHideFlags: 0

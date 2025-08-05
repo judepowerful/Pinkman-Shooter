@@ -77,7 +77,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -1287822692, guid: e35e3f0847e654f4dbac77f0647ee792, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
@@ -197,7 +197,10 @@ MonoBehaviour:
   moveSpeed: 2
   maxHealth: 4
   stopDistance: 3
+  cherryPrefab: {fileID: 924298445294307913, guid: ecff087e057d20c459c8c413c3f736d9, type: 3}
+  isDead: 0
   bulletPrefab: {fileID: 5629199884326920581, guid: ea9504370ea00bc40bcdc7f9d81afabe, type: 3}
+  shootSound: {fileID: 8300000, guid: f4d5d6bdee183834dbca76c2a8855cbf, type: 3}
   firePoint: {fileID: 9163617306958617625}
   attackCooldown: 1
   attackRange: 10
