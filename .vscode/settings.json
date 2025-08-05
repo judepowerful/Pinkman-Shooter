@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Pinkman-Shooter.sln"
+    "dotnet.defaultSolution": "Shooter!.sln"
 }

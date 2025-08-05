@@ -1,5 +1,7 @@
 using System;
+using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -23,10 +25,10 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private Animator anim;
     private SpriteRenderer sr;
-    
+
     [HideInInspector] public bool facingRight = true;
     [HideInInspector] public Vector3 mouseWorld;
-    
+
     // 输入
     private float moveInput = 0f;
     private bool jumpRequested = false;
@@ -186,7 +188,8 @@ public class PlayerController : MonoBehaviour
     private void Die()
     {
         anim.SetTrigger("die");
-        // 这里可以添加更多死亡逻辑，比如重置场景等
+        // 重置场景
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         Debug.Log("Player has died.");
     }
 

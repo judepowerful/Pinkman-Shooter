@@ -17,6 +17,7 @@ public class GunController : MonoBehaviour
     private Vector3 originalWeaponLocalPos;
     private Vector3 recoilVisualOffset;
     [SerializeField] private float recoilReturnSpeed = 20f;
+    [SerializeField] private WeaponSwitcherUI weaponSwitcherUI;
 
     private void Start()
     {
@@ -119,6 +120,18 @@ public class GunController : MonoBehaviour
     }
 
     /// <summary>
+    /// 切换武器调整UI
+    /// </summary>
+    /// <param name="currentIndex">当前武器index</param>
+    public void UpdateWeaponUI(int currentIndex)
+    {
+        if (weaponSwitcherUI != null && currentWeapon != null)
+        {
+            weaponSwitcherUI.SwitchWeapon(currentIndex);
+        }
+    }
+
+    /// <summary>
     /// 应用后坐力到玩家
     /// 根据武器朝向施加力
     /// </summary>
@@ -147,6 +160,7 @@ public class GunController : MonoBehaviour
                 currentWeaponIndex = 0;
 
             EquipWeapon(weaponPrefabs[currentWeaponIndex]);
+            UpdateWeaponUI(currentWeaponIndex);
             lastSwitchTime = Time.time;
         }
         else if (scroll < 0f)
@@ -156,6 +170,7 @@ public class GunController : MonoBehaviour
                 currentWeaponIndex = weaponPrefabs.Count - 1;
 
             EquipWeapon(weaponPrefabs[currentWeaponIndex]);
+            UpdateWeaponUI(currentWeaponIndex);
             lastSwitchTime = Time.time;
         }
     }

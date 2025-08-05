@@ -176,9 +176,9 @@ MonoBehaviour:
   team: 0
   lifeTime: 5
   hitInfo:
-    damage: 1
-    knockbackDirection: {x: 1, y: 0}
-    knockbackForce: 5
+    damage: 0
+    knockbackDirection: {x: 0, y: 0}
+    knockbackForce: 0
   hitEffectPrefab: {fileID: 1868326479664954740, guid: a6f32a76f28569943847c828a534c4c3, type: 3}
 --- !u!1 &8890215459279576528
 GameObject:

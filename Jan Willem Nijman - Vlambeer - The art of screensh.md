@@ -16,4 +16,3 @@
 # My improvements and thoughts
 
 1. 敌人收到伤害身体变暗 - done
-2. 鼠标变成瞄准键 - 不同的武器不一样？

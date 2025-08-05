@@ -23,14 +23,14 @@ public abstract class Enemy : MonoBehaviour
     protected Rigidbody2D rb;
     protected int currentHealth;
     protected SpriteRenderer sr;
-    protected bool isDead = false;
+    public bool isDead = false;
 
 
     protected virtual void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
-        player = GameObject.FindGameObjectWithTag("Player")?.transform;
+        player = GameObject.FindGameObjectWithTag("Player").transform;
         currentHealth = maxHealth;
 
         // 锁定刚体旋转，防止敌人翻转
@@ -46,7 +46,7 @@ public abstract class Enemy : MonoBehaviour
             AttackPlayer();
         }
     }
-
+    
     protected virtual void MoveTowardsPlayer()
     {
         // 到底stopDistance距离时停止移动
@@ -79,10 +79,7 @@ public abstract class Enemy : MonoBehaviour
     protected virtual void UpdateDamageTint()
     {
         if (sr == null) return;
-
         float healthRatio = (float)currentHealth / maxHealth;
-
-        // 健康越低越灰，Lerp 到 Color.gray
         sr.color = Color.Lerp(Color.gray, Color.white, healthRatio);
     }
 

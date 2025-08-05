@@ -19,6 +19,8 @@ public class Bullet : MonoBehaviour
     [Header("Hit Effect / 命中特效")]
     public GameObject hitEffectPrefab; // 每种子弹可指定命中特效
 
+    private bool isHit = false; // 是否已经命中
+
     private void Start()
     {
         // 设置子弹生命周期
@@ -27,11 +29,12 @@ public class Bullet : MonoBehaviour
 
     void Update()
     {
-        transform.Translate(Vector2.right * speed * Time.deltaTime);
+        transform.Translate(speed * Time.deltaTime * Vector2.right);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (isHit) return; // 如果已经命中，则不再处理
         if ((team == BulletTeam.Player && collision.CompareTag("Player")) ||
             (team == BulletTeam.Enemy && collision.CompareTag("Enemy")) ||
             collision.CompareTag("Bullet") || collision.CompareTag("Corpse"))
@@ -41,24 +44,23 @@ public class Bullet : MonoBehaviour
 
         if (team == BulletTeam.Player && collision.CompareTag("Enemy"))
         {
-            collision.GetComponent<Enemy>()?.TakeDamage(1);
+            collision.GetComponent<Enemy>().TakeDamage(hitInfo.damage);
         }
         else if (team == BulletTeam.Enemy && collision.CompareTag("Player"))
         {
-            collision.GetComponent<PlayerController>()?.TakeDamage(hitInfo, transform.position);
+            collision.GetComponent<PlayerController>().TakeDamage(hitInfo, transform.position);
         }
+
+        isHit = true; // 标记为已命中
 
         // 播放命中特效
         if (hitEffectPrefab != null)
-        {
             Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
-        }
 
         // 禁用碰撞 & 停止运动
         GetComponent<Collider2D>().enabled = false;
         GetComponent<Rigidbody2D>().velocity = Vector2.zero;
 
-        // 延迟销毁，等特效播放完
         Destroy(gameObject);
     }
 }

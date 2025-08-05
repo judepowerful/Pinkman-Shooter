@@ -271,8 +271,8 @@ MonoBehaviour:
   shellEjectForce: 3
   shellTorque: 0.5
   muzzleFlashPrefab: {fileID: 5659672650839136257, guid: 083fcf3307310b448b7ed25f9e10c5ca, type: 3}
-  shakeDuration: 0.1
-  shakeMagnitude: 0.1
+  shakeDuration: 0.2
+  shakeMagnitude: 0.2
 --- !u!114 &7443644447386486917
 MonoBehaviour:
   m_ObjectHideFlags: 0
